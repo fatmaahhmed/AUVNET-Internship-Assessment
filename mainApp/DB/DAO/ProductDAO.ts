@@ -3,18 +3,44 @@ import {
   PaginatedResponse,
   Product,
   UpdateProductRequest,
-} from "../../types";
+} from "../sql/models/types";
 
-export interface ProductDao {
-  getProductById(productId: number): Promise<Product | null>;
-  getAllProducts(
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
+export class ProductDAO {
+  async createProduct(productData: CreateProductRequest): Promise<Product> {
+    return prisma.product.create({ data: productData });
+  }
+
+  async getProductById(productId: number): Promise<Product | null> {
+    return prisma.product.findUnique({ where: { product_id: productId } });
+  }
+
+  async updateProduct(
+    productId: number,
+    productData: UpdateProductRequest
+  ): Promise<Product | null> {
+    return prisma.product.update({
+      where: { product_id: productId },
+      data: productData,
+    });
+  }
+
+  async deleteProduct(productId: number): Promise<Product | null> {
+    return prisma.product.delete({ where: { product_id: productId } });
+  }
+
+  async getAllProducts(
     page: number,
     pageSize: number
-  ): Promise<PaginatedResponse<Product>>;
-  createProduct(product: CreateProductRequest): Promise<Product>;
-  updateProduct(
-    productId: number,
-    updateData: UpdateProductRequest
-  ): Promise<Product>;
-  deleteProduct(productId: number): Promise<void>;
+  ): Promise<PaginatedResponse<Product>> {
+    const skip = (page - 1) * pageSize;
+    const [total, data] = await Promise.all([
+      prisma.product.count(),
+      prisma.product.findMany({ skip, take: pageSize }),
+    ]);
+    return { data, page, pageSize, total };
+  }
 }
