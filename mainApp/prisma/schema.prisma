@@ -16,8 +16,10 @@ model User {
   role     String  @default("user")
   token    String  @default("") // Prisma doesn't support default("null"). Use an empty string instead.
 
-  products Product[]
+  products  Product[]
   wishlists WishList[]
+
+  @@map("users")
 }
 
 model Category {
@@ -27,30 +29,34 @@ model Category {
   products      Product[]
 
   @@index([parent_id])
+  @@map("categories")
 }
 
 model Product {
-  product_id   Int     @id @default(autoincrement())
-  name         String  @unique
-  description  String?
-  price        Float
-  category_id  Int
-  user_id      Int
+  product_id    Int      @id @default(autoincrement())
+  name          String   @unique
+  description   String?
+  price         Float
+  category_id   Int
+  user_id       Int
   category_name String
 
-  User         User    @relation(fields: [user_id], references: [user_id])
-  Category     Category @relation(fields: [category_id], references: [category_id])
-  WishList     WishList[]
+  User         User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  Category     Category @relation(fields: [category_id], references: [category_id], onDelete: Cascade)
+  WishLists    WishList[] @relation("ProductWishList")
+
+  @@map("products")
 }
 
 model WishList {
-  wishlist_id Int    @id @default(autoincrement())
-  user_id     Int
-  product_id  Int
+  wishlist_id  Int    @id @default(autoincrement())
+  user_id      Int
+  product_id   Int
   product_name String
-  
-  User        User   @relation(fields: [user_id], references: [user_id])
-  Product     Product @relation(fields: [product_id], references: [product_id])
+
+  User         User    @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  Product      Product @relation("ProductWishList", fields: [product_id], references: [product_id], onDelete: Cascade)
 
   @@unique([product_id, user_id])
+  @@map("wishlists")
 }

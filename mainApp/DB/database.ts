@@ -9,9 +9,7 @@ dotenv.config();
 
 const databasePath = process.env.DATABASE_PATH
   ? path.resolve(process.env.DATABASE_PATH)
-  : path.resolve("./my-database.db");
-
-// Function to enable foreign key support
+  : path.resolve("./INTERN-database.db");
 
 // Open database connection and enable foreign key support
 export const dbPromise = (async () => {
@@ -19,7 +17,6 @@ export const dbPromise = (async () => {
     filename: databasePath,
     driver: sqlite3.Database,
   });
-  // Handle database errors
 
   // Enable foreign key support
   await enableForeignKeySupport(db);

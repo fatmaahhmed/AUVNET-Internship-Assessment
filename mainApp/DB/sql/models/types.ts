@@ -20,29 +20,40 @@ export type User = {
 export type Admin = User & {};
 
 // Category Types
-export type Category = {
+
+export interface Category {
   category_id: number;
-  name: string;
-  parent_id?: number; // FK to Category, nullable for top-level categories
-};
+  category_name: string;
+  parent_id?: number;
+  products: Product[];
+}
 
 // Product Types
-export type Product = {
-  product_id?: number;
+export interface Product {
+  product_id: number;
   name: string;
-  description: string;
-  price: Number;
-  user_id?: number; // FK to User
-  category_id?: number; // FK to Category
-};
-
-// WishList Types
-export type WishList = {
+  description?: string;
+  price: number;
+  category_id: number;
+  user_id: number;
+  category: Category;
+  user: User;
+  wishlists: WishList[];
+}
+// UpdateCategoryRequest type
+export interface UpdateCategoryRequest {
+  category_name?: string;
+  parent_id?: number;
+}
+// WishList model type
+export interface WishList {
   wishlist_id: number;
-  ProductName: string; //
-  user_id: number; // FK to User
-  product_id: number; // FK to Product
-};
+  user_id: number;
+  product_id: number;
+  product_name: string;
+  user: User;
+  product: Product;
+}
 
 // Authentication Types
 export type AuthRequest = {
@@ -56,12 +67,12 @@ export type AuthResponse = {
 };
 
 // API Response Types
-export type PaginatedResponse<T> = {
-  data: T[];
-  page: number;
-  pageSize: number;
-  total: number;
-};
+// export type PaginatedResponse<T> = {
+//   data: T[];
+//   page: number;
+//   pageSize: number;
+//   total: number;
+// };
 
 // Admin Request Types
 export type CreateAdminRequest = {
@@ -97,11 +108,6 @@ export type UpdateProductRequest = {
 // Category Request Types
 export type CreateCategoryRequest = {
   category_name: string;
-  parent_id?: number;
-};
-
-export type UpdateCategoryRequest = {
-  category_name?: string;
   parent_id?: number;
 };
 
