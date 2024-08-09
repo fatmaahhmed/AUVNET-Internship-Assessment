@@ -20,7 +20,86 @@ This guide outlines the development of a simple E-Commerce application with basi
 
 ### ERD Model
 
-An Entity-Relationship Diagram (ERD) will be designed to illustrate the relationships between entities: User, Admin, Product, Category, and WishList.
+# E-Commerce Application ERD Documentation
+
+## Overview
+
+This document provides the Entity-Relationship Diagram (ERD) for the E-Commerce application. It outlines the tables, their attributes, and the relationships between them. The application includes entities such as User, Category, Product, and WishList.
+
+## Tables and Relationships
+
+### Table: User
+
+| Column     | Type    | Constraints                       |
+|------------|---------|----------------------------------|
+| `user_id`  | integer | Primary Key, Auto Increment       |
+| `username` | text    | Not Null, Unique                  |
+| `name`     | text    | Not Null                           |
+| `email`    | text    | Not Null, Unique                  |
+| `password` | text    | Not Null                           |
+| `role`     | text    | Not Null, Default: 'user'         |
+| `token`    | text    | Default: ''                        |
+
+### Table: Category
+
+| Column          | Type    | Constraints                   |
+|-----------------|---------|------------------------------|
+| `category_id`   | integer | Primary Key, Auto Increment  |
+| `category_name` | text    | Not Null, Unique             |
+| `parent_id`     | integer | Optional                      |
+
+### Table: Product
+
+| Column         | Type    | Constraints                      |
+|----------------|---------|---------------------------------|
+| `product_id`   | integer | Primary Key, Auto Increment      |
+| `name`         | text    | Not Null, Unique                |
+| `description`  | text    | Optional                         |
+| `price`        | real    | Not Null                         |
+| `category_id`  | integer | Foreign Key                      |
+| `user_id`      | integer | Foreign Key                      |
+
+### Table: WishList
+
+| Column        | Type    | Constraints                      |
+|---------------|---------|---------------------------------|
+| `wishlist_id` | integer | Primary Key, Auto Increment      |
+| `user_id`     | integer | Foreign Key                      |
+| `product_id`  | integer | Foreign Key                      |
+| `product_name`| text    | Not Null                         |
+
+## Relationships
+
+- **User** to **Product**: One-to-Many
+  - `User(user_id) < Product(user_id)`
+
+- **Category** to **Product**: One-to-Many
+  - `Category(category_id) < Product(category_id)`
+
+- **Category** self-referencing: One-to-Many
+  - `Category(category_id) < Category(parent_id)`
+
+- **User** to **WishList**: One-to-Many
+  - `User(user_id) < WishList(user_id)`
+
+- **Product** to **WishList**: One-to-Many
+  - `Product(product_id) < WishList(product_id)`
+
+- **WishList** Composite Key: Unique
+  - `(product_id, user_id) < WishList(product_id, user_id)`
+
+## Diagram
+
+Here, you can include a visual ERD diagram if available. This can be created using various ERD tools or included as an image file.
+
+## Notes
+
+- Ensure that foreign key constraints and indexes are correctly set in your database schema to maintain data integrity and improve query performance.
+- The ERD provides a high-level overview of the database schema. Additional details may be required for full implementation.
+
+---
+
+This document serves as a reference for understanding the database structure of the E-Commerce application. Adjustments may be made based on evolving requirements.
 
 ### Categories
 
@@ -52,20 +131,6 @@ A three-level depth relationship will be implemented using a self-referencing ta
 
 Pagination will be implemented for all GET requests to handle large datasets efficiently.
 
-## Frontend Development
-
-### Components
-
-- **User Interface**:
-  - Login/Signup forms
-  - Product list and detail views
-  - Wishlist management
-- **Admin Interface**:
-  - Admin dashboard for managing users, products, and categories
-
-### Minimal Styling
-
-Basic CSS or a minimalistic CSS framework like Bootstrap will be used to ensure the application is presentable without extensive styling.
 
 ## Implementation Steps
 
@@ -81,15 +146,5 @@ Basic CSS or a minimalistic CSS framework like Bootstrap will be used to ensure 
 
    - Initialize React.js project.
    - Create necessary components for user and admin interfaces.
-   - Integrate with backend APIs.
+   - Integrate with backend iAPIs.
 
-3. **Testing**:
-
-   - Test all API endpoints using tools like Postman.
-   - Ensure all functionalities work as expected.
-
-4. **Deployment**:
-   - Deploy backend on a service like Heroku.
-   - Deploy frontend on a service like Vercel or Netlify.
-
-By following these steps, you will create a functional E-Commerce application that meets the specified requirements, focusing on backend development and ensuring a minimal yet effective frontend.
