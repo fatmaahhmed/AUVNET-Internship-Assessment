@@ -1,98 +1,95 @@
-# ERD
+# E-Commerce Application Development Guide
 
-## Storage
+## Overview
 
-### Schema
+This guide outlines the development of a simple E-Commerce application with basic functionalities, focusing on backend skills and minimal frontend design. The application will support two roles: Admin and User, with robust authentication, authorization, and validation mechanisms.
 
-**Roles**
+## Technology Stack
 
-- `role_id` (PK, INT, AUTO_INCREMENT)
-- `role_name` (ENUM: 'Admin' | 'User')
+### Backend
 
-**Users**
+- **Server-side**: Node.js with Express.js
+- **Database**:sqlite3
+- **ORM**: Prisma (for SQL)
 
-- `user_id` (PK, INT, AUTO_INCREMENT)
-- `username` (VARCHAR(255), UNIQUE)
-- `email` (VARCHAR(255), UNIQUE)
-- `password` (VARCHAR(255))
-- `role_id` (FK to Roles.role_id, INT)
+### Frontend
 
-**Categories**
+- **Framework**: React.js
 
-- `category_id` (PK, INT, AUTO_INCREMENT)
-- `category_name` (VARCHAR(255))
-- `parent_id` (FK to Categories.category_id, INT, nullable)
+## Database Design
 
-**Products**
+### ERD Model
 
-- `product_id` (PK, INT, AUTO_INCREMENT)
-- `product_name` (VARCHAR(255))
-- `user_id` (FK to Users.user_id, INT)
-- `category_id` (FK to Categories.category_id, INT)
-- `price` (DECIMAL(10, 2))
-- `description` (TEXT, nullable)
+An Entity-Relationship Diagram (ERD) will be designed to illustrate the relationships between entities: User, Admin, Product, Category, and WishList.
 
-**WishList**
+### Categories
 
-- `wishlist_id` (PK, INT, AUTO_INCREMENT)
-- `user_id` (FK to Users.user_id, INT)
-- `product_id` (FK to Products.product_id, INT)
+A three-level depth relationship will be implemented using a self-referencing table/collection for categories.
 
-## Server
+## Authentication and Authorization
 
-### Auth
+- **JWT (JSON Web Tokens)**: For handling authentication and authorization.
+- **Middleware**: Middleware will be created to check roles (Admin, User) and validate tokens.
 
-- **User Authentication**: Implement JWT or OAuth for user authentication.
-- **Role-based Authorization**: Ensure access control based on roles (Admin, User).
-- **Admin Authentication**: Default credentials for admin login (username: `admin`, password: `admin`).
+## API Endpoints
 
-### API
+### User Services
 
-**Auth**:
+- `POST /signup`
+- `POST /login`
+- `GET /products`, `POST /products`, `PUT /products/:id`, `DELETE /products/:id`
+- `GET /wishlist`, `POST /wishlist`, `DELETE /wishlist/:id`
 
-- `POST /auth/signup`: User sign-up
-- `POST /auth/login`: User login (username, password)
-- `POST /auth/admin-login`: Admin login (default credentials)
+### Admin Services
 
-**Products**:
+- `POST /admin/login`
+- `GET /admin`, `POST /admin`, `PUT /admin/:id`, `DELETE /admin/:id`
+- `GET /users`, `DELETE /users/:id`
+- `GET /products`, `DELETE /products/:id`
+- `GET /categories`, `POST /categories`, `PUT /categories/:id`, `DELETE /categories/:id`
 
-- `GET /products`: View all products (paginated)
-- `POST /products`: Add a new product (User only)
-- `PUT /products/:id`: Update a product (User only, own products)
-- `DELETE /products/:id`: Delete a product (User only, own products)
-- `GET /products/:id`: View a specific product
+### Pagination
 
-**WishList**:
+Pagination will be implemented for all GET requests to handle large datasets efficiently.
 
-- `GET /wishlist`: View user's wishlist (paginated)
-- `POST /wishlist`: Add a product to wishlist
-- `DELETE /wishlist/:productId`: Remove a product from wishlist
+## Frontend Development
 
-**Admins**:
+### Components
 
-- `GET /admins`: View all admins (paginated)
-- `POST /admins`: Create a new admin
-- `PUT /admins/:id`: Update an admin
-- `DELETE /admins/:id`: Delete an admin
+- **User Interface**:
+  - Login/Signup forms
+  - Product list and detail views
+  - Wishlist management
+- **Admin Interface**:
+  - Admin dashboard for managing users, products, and categories
 
-**Users**:
+### Minimal Styling
 
-- `GET /users`: View all users (paginated)
-- `DELETE /users/:id`: Delete a user
+Basic CSS or a minimalistic CSS framework like Bootstrap will be used to ensure the application is presentable without extensive styling.
 
-**Categories**:
+## Implementation Steps
 
-- `GET /categories`: View all categories (paginated)
-- `POST /categories`: Add a new category
-- `PUT /categories/:id`: Update a category
-- `DELETE /categories/:id`: Delete a category
+1. **Setup Backend**:
 
-## Clients
+   - Initialize Node.js project with Express.
+   - Setup database connection using Prisma or Mongoose.
+   - Define models and relationships.
+   - Implement authentication and authorization.
+   - Develop API endpoints.
 
-- **Frontend**: Minimal UI to interact with API, focusing on backend functionality.
-- **Mobile**: If applicable, integrate with mobile app using the same API endpoints.
+2. **Setup Frontend**:
 
-## Hosting
+   - Initialize React.js project.
+   - Create necessary components for user and admin interfaces.
+   - Integrate with backend APIs.
 
-- **Server Hosting**: Use cloud providers like AWS, Azure, or Heroku for deploying the server.
-- **Database Hosting**: Use managed database services like AWS RDS, Azure SQL Database, or other cloud-based databases.
+3. **Testing**:
+
+   - Test all API endpoints using tools like Postman.
+   - Ensure all functionalities work as expected.
+
+4. **Deployment**:
+   - Deploy backend on a service like Heroku.
+   - Deploy frontend on a service like Vercel or Netlify.
+
+By following these steps, you will create a functional E-Commerce application that meets the specified requirements, focusing on backend development and ensuring a minimal yet effective frontend.
