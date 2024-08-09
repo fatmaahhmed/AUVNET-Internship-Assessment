@@ -90,16 +90,17 @@ This document provides the Entity-Relationship Diagram (ERD) for the E-Commerce 
 
 ## Diagram
 
-Here, you can include a visual ERD diagram if available. This can be created using various ERD tools or included as an image file.
+<img width="1046" alt="image" src="https://github.com/user-attachments/assets/db718d91-71b9-4cb6-ba53-aee0722c8363">
+
 
 ## Notes
 
-- Ensure that foreign key constraints and indexes are correctly set in your database schema to maintain data integrity and improve query performance.
+
 - The ERD provides a high-level overview of the database schema. Additional details may be required for full implementation.
 
 ---
 
-This document serves as a reference for understanding the database structure of the E-Commerce application. Adjustments may be made based on evolving requirements.
+
 
 ### Categories
 
