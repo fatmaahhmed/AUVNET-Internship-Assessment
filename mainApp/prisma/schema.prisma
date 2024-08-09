@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  user_id  Int     @id @default(autoincrement())
+  username String  @unique
+  name     String
+  email    String  @unique
+  password String
+  role     String  @default("user")
+  token    String  @default("") // Prisma doesn't support default("null"). Use an empty string instead.
+
+  products Product[]
+  wishlists WishList[]
+}
+
+model Category {
+  category_id   Int      @id @default(autoincrement())
+  category_name String   @unique
+  parent_id     Int?
+  products      Product[]
+
+  @@index([parent_id])
+}
+
+model Product {
+  product_id   Int     @id @default(autoincrement())
+  name         String  @unique
+  description  String?
+  price        Float
+  category_id  Int
+  user_id      Int
+  category_name String
+
+  User         User    @relation(fields: [user_id], references: [user_id])
+  Category     Category @relation(fields: [category_id], references: [category_id])
+  WishList     WishList[]
+}
+
+model WishList {
+  wishlist_id Int    @id @default(autoincrement())
+  user_id     Int
+  product_id  Int
+  product_name String
+  
+  User        User   @relation(fields: [user_id], references: [user_id])
+  Product     Product @relation(fields: [product_id], references: [product_id])
+
+  @@unique([product_id, user_id])
+}
