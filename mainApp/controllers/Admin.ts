@@ -152,6 +152,81 @@ export class AdminService {
       res.status(500).json({ error: "Internal server error" });
     }
   }
+  async getUsers(req: Request, res: Response) {
+    try {
+      const users = await this.prisma.user.findMany(); // Fetch all users
+      res.status(200).json({
+        message: "Users fetched successfully",
+        users,
+      });
+    } catch (err) {
+      console.error("Error fetching users:", err);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  async deleteUser(req: Request, res: Response) {
+    const { userId } = req.params;
+
+    try {
+      // Check if the user exists
+      const user = await this.prisma.user.findUnique({
+        where: { user_id: Number(userId) },
+      });
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // Delete the user
+      await this.prisma.user.delete({
+        where: { user_id: Number(userId) },
+      });
+
+      res.status(200).json({ message: "User deleted successfully" });
+    } catch (err) {
+      console.error("Error deleting user:", err);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  async getProducts(req: Request, res: Response) {
+    try {
+      const products = await this.prisma.product.findMany(); // Fetch all products
+      res.status(200).json({
+        message: "Products fetched successfully",
+        products,
+      });
+    } catch (err) {
+      console.error("Error fetching products:", err);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  async deleteProduct(req: Request, res: Response) {
+    const { productId } = req.params;
+
+    try {
+      // Check if the product exists
+      const product = await this.prisma.product.findUnique({
+        where: { product_id: Number(productId) },
+      });
+
+      if (!product) {
+        return res.status(404).json({ error: "Product not found" });
+      }
+
+      // Delete the product
+      await this.prisma.product.delete({
+        where: { product_id: Number(productId) },
+      });
+
+      res.status(200).json({ message: "Product deleted successfully" });
+    } catch (err) {
+      console.error("Error deleting product:", err);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
 }
 
 export default AdminService;

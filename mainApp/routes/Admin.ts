@@ -22,11 +22,21 @@ router.delete("/categories/:categoryId", (req, res) =>
 router.get("/categories", (req, res) =>
   adminService.getPaginatedCategories(req, res)
 );
-router.get("/products", (req, res) =>
-  userService.getPaginatedProducts(req, res)
+
+// Route to view all products
+router.get("/products", (req, res) => adminService.getProducts(req, res));
+
+// Route to delete a product
+router.delete("/products/:productId", (req, res) =>
+  adminService.deleteProduct(req, res)
 );
 
-router.delete("/deleteproducts/:productId", (req, res) =>
-  userService.deleteProduct(req, res)
+// Route to view all users
+router.get("/users", (req, res) => adminService.getUsers(req, res));
+
+// Route to delete a user
+router.delete("/users/:userId", (req, res) =>
+  adminService.deleteUser(req, res)
 );
+
 export default router;
